@@ -1,6 +1,6 @@
 <?php
 
-namespace Products;
+namespace Entities;
 
 class Product {
 private int $id;
@@ -12,6 +12,6 @@ private string $category;
 private int $character_id;
 private string $character;
 private string $description;
-private string $image2;
-private string $image3;
+private string|null $image2;
+private string|null $image3;
 }

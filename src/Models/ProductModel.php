@@ -1,7 +1,13 @@
 <?php
-namespace Entities;
+namespace Models;
+
 
 require_once 'src/Entities/Product.php';
+
+use Entities\Product;
+use PDO;
+
+
 
 class ProductModel {
     public static function getProducts(PDO $db) : array {
@@ -10,6 +16,4 @@ class ProductModel {
         $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
         return $products = $query->fetchAll();
     }
-
-
 }

@@ -40,5 +40,22 @@ class ProductModel {
         $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
         return $product = $query->fetch();
     }
+    public static function getSelectedProducts(PDO $db, array $selectedItems) : array
+    {
+//        TODO how to get the quotes off the string ['id' =>  $stringSelectedItems]
+        $stringSelectedItems = trim( '(' . join(" , ", $selectedItems) . ')', '"');
+//            echo "<pre>";
+//            var_dump($stringSelectedItems);
+//            echo "</pre>";
+            $query = $db->prepare('SELECT `id`, `title`, `image`, `price`, `category_id`, `category`, `character_id`, `character`, `description`, `image2`, `image3` FROM `products` WHERE `category_id` IN' . $stringSelectedItems . ';');
+            $query->execute();
+            $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
+            $products = $query->fetchAll();
+
+        return $products;
+
+
+    }
+
 }
 

@@ -14,10 +14,16 @@ $products = ProductModel::getProducts($db);
 $categories = ProductModel::getCategories($db);
 $characters = ProductModel::getCharacters($db);
 
-//echo '<pre>';
-//var_dump($categories);
-//echo '</pre>';
 
+function selectCategories ($categories): array {
+    foreach ($categories as $category) {
+        if (isset($_GET[$category->category_id])) {
+            $selectedCategories[] = $category->category_id;
+        }
+
+    }
+    return $selectedCategories;
+}
 ?>
 
 <!doctype html>
@@ -49,18 +55,23 @@ $characters = ProductModel::getCharacters($db);
             echo $character->displayCharacter();
         }
         ?>
-
+<input type="submit" class="submit-button" name="submitted" value="Filter"/>
     </form>
     <div class="cards">
 <?php
+ if (!isset($_GET['submitted'])) {
     foreach ($products as $product) {
         echo $product->displayHP();
-    }
+    } } else {
+         $selectedCategories = selectCategories($categories);
+         $slectedProducts = ProductModel::getSelectedProducts($db, $selectedCategories);
+         foreach ($slectedProducts as $product) {
+            echo $product->displayHP();
+        }
+ }
 
     ?>
     </div>
 </section>
 </body>
 </html>
-
-

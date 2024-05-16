@@ -8,10 +8,21 @@ require_once 'src/Models/ProductModel.php';
 require_once 'src/Entities/Product.php';
 
 $db = PdoFactory::connect();
-//$products = ProductModel::getProducts($db);
-// getProductById
 $id = $_GET["id"];
-$product = ProductModel::getProductById($db, $id);
+if(!empty($id) && is_numeric($id) && $id > 0 &&  $id <= 16) {
+    $id = intval($id);
+    if($id >= 1 && $id <= 16) {
+        $product = ProductModel::getProductById($db, $id);
+    } else {
+        echo "<h1>Sorry, product not found.</h1>
+<a href='index.php'><button>Return Home</button></a>";
+        return;
+    }
+} else {
+    echo "<h1>Sorry, product not found.</h1>
+<a href='index.php'><button>Return Home</button></a>";
+    return;
+}
 ?>
 
 

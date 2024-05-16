@@ -43,7 +43,7 @@ class ProductModel {
     public static function getSelectedProducts(PDO $db, array $selectedItems) : array
     {
 //        TODO how to get the quotes off the string ['id' =>  $stringSelectedItems]
-        $stringSelectedItems = trim( '(' . join(" , ", $selectedItems) . ')', '"');
+        $stringSelectedItems = '(' . join(" , ", $selectedItems) . ')';
 //            echo "<pre>";
 //            var_dump($stringSelectedItems);
 //            echo "</pre>";

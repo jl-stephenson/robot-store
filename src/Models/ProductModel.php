@@ -33,4 +33,12 @@ class ProductModel {
         $query->setFetchMode(PDO::FETCH_CLASS, Character::class);
         return $characters = $query->fetchAll();
     }
+
+    public static function getProductById (PDO $db, int $id) {
+        $query = $db->prepare('SELECT `id`, `title`, `image`, `price`, `category_id`, `category`, `character_id`, `character`, `description`, `image2`, `image3` FROM `products` WHERE `id` = :id;');
+        $query->execute(['id' => $id]);
+        $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
+        return $product = $query->fetch();
+    }
 }
+

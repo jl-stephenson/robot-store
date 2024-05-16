@@ -2,10 +2,25 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
 
+button {
+   font-size: 1rem;
+    padding: 10px;
+    border-radius: 3px;
+    border: 0;
+}
+
+button:hover {
+    cursor: pointer;
+}
 
 body {
     font-family: "Roboto", sans-serif;
+
 }
 
 .container {
@@ -64,3 +79,12 @@ body {
     padding: 3px 0;
 }
 
+.product-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.lg-image {
+    width: 100%;
+    height: auto;
+}

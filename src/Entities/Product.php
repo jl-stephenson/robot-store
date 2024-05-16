@@ -16,11 +16,11 @@ private string|null $image2;
 private string|null $image3;
 
 public function displayHP() {
-    return "<div class='product-card'>
-<img src='{$this->image}' alt='{$this->description}'/>
-<p>{$this->title}</p>
-<p>£{$this->price}</p>
-</div>";
+    return '<div class="product-card">
+<img src="' . $this->image . '" alt="' . $this->description . '"/>
+<p>' . $this->title . '</p>
+<p>$' . number_format($this->price, 2) . '</p>
+</div>';
 }
 
 }

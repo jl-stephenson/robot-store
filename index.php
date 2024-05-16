@@ -62,10 +62,11 @@ function selectCategories ($categories): array {
  if (!isset($_GET['submitted'])) {
     foreach ($products as $product) {
         echo $product->displayHP();
-    } } else {
+    }
+ } else {
          $selectedCategories = selectCategories($categories);
-         $slectedProducts = ProductModel::getSelectedProducts($db, $selectedCategories);
-         foreach ($slectedProducts as $product) {
+         $selectedProducts = ProductModel::getSelectedProducts($db, $selectedCategories);
+         foreach ($selectedProducts as $product) {
             echo $product->displayHP();
         }
  }

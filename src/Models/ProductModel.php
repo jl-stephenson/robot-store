@@ -42,19 +42,25 @@ class ProductModel {
     }
     public static function getSelectedProducts(PDO $db, array $selectedItems) : array
     {
-//        TODO how to get the quotes off the string ['id' =>  $stringSelectedItems]
-        $stringSelectedItems = '(' . join(" , ", $selectedItems) . ')';
-//            echo "<pre>";
-//            var_dump($stringSelectedItems);
-//            echo "</pre>";
-            $query = $db->prepare('SELECT `id`, `title`, `image`, `price`, `category_id`, `category`, `character_id`, `character`, `description`, `image2`, `image3` FROM `products` WHERE `category_id` IN' . $stringSelectedItems . ';');
-            $query->execute();
+//  Map the array of strings to an array of integers
+        $ids = array_map(function($item) {
+            return $item;
+        }, $selectedItems);
+
+        // Map the array of ints to an array of keys
+        $preparedIds = array_map(function($v) {
+            return ":id$v";
+        }, $ids);
+
+        // Combine arrays into an associative array
+        $preparedValues = array_combine($preparedIds, $ids);
+
+            $query = $db->prepare('SELECT `id`, `title`, `image`, `price`, `category_id`, `category`, `character_id`, `character`, `description`, `image2`, `image3` FROM `products` WHERE `category_id` IN(' . implode(",", $preparedIds) . ');');
+            $query->execute($preparedValues);
             $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
             $products = $query->fetchAll();
 
         return $products;
-
-
     }
 
 }

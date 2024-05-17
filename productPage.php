@@ -6,10 +6,11 @@ use Models\ProductModel;
 require_once 'src/Factories/PdoFactory.php';
 require_once 'src/Models/ProductModel.php';
 require_once 'src/Entities/Product.php';
+const TOTAL_ROWS = 16;
 
 $db = PdoFactory::connect();
 $id = $_GET["id"];
-if(!empty($id) && is_numeric($id) && $id >= 1 &&  $id <= 16) {
+if(!empty($id) && is_numeric($id) && $id >= 1 &&  $id <= TOTAL_ROWS) {
     // Catch floats
     $id = intval($id);
     $product = ProductModel::getProductById($db, $id);

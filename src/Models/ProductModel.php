@@ -40,23 +40,41 @@ class ProductModel {
         $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
         return $product = $query->fetch();
     }
-    public static function getSelectedProducts(PDO $db, array $selectedItems) : array
+    public static function getSelectedProducts(PDO $db, array $selectedCategories = [], array $selectedCharacters = []) : array
     {
 //  Map the array of strings to an array of integers
-        $ids = array_map(function($item) {
-            return $item;
-        }, $selectedItems);
+        $catIds = array_map(function($categoryId) {
+            return $categoryId;
+        }, $selectedCategories);
 
         // Map the array of ints to an array of keys
-        $preparedIds = array_map(function($v) {
+        $preparedCatIds = array_map(function($v) {
             return ":id$v";
-        }, $ids);
+        }, $catIds);
 
         // Combine arrays into an associative array
-        $preparedValues = array_combine($preparedIds, $ids);
+        $preparedCatValues = array_combine($preparedCatIds, $catIds);
 
-            $query = $db->prepare('SELECT `id`, `title`, `image`, `price`, `category_id`, `category`, `character_id`, `character`, `description`, `image2`, `image3` FROM `products` WHERE `category_id` IN(' . implode(",", $preparedIds) . ');');
-            $query->execute($preparedValues);
+        // Divide the character ids to match db values
+        $selectedCharacterIds = array_map(function($v) {
+            return $v / 10;
+        }, $selectedCharacters);
+
+        $charIds = array_map(function($characterId) {
+            return $characterId;
+        }, $selectedCharacterIds);
+
+        $preparedCharIds = array_map(function($v) {
+            return ":id$v";
+        }, $selectedCharacters);
+
+        $preparedCharValues = array_combine($preparedCharIds, $charIds);
+        $combinedValues = array_merge($preparedCatValues, $preparedCharValues);
+
+        $sql = 'SELECT `id`, `title`, `image`, `price`, `category_id`, `category`, `character_id`, `character`, `description`, `image2`, `image3` FROM `products` WHERE `category_id` IN (' . implode(",", $preparedCatIds) . ') OR `character_id` IN (' . implode(",", $preparedCharIds) . ');';
+
+        $query = $db->prepare($sql);
+            $query->execute($combinedValues);
             $query->setFetchMode(PDO::FETCH_CLASS, Product::class);
             $products = $query->fetchAll();
 

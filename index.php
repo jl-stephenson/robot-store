@@ -3,10 +3,14 @@
 
 use Factories\PdoFactory;
 use Models\ProductModel;
+use Services\SelectedIdsService;
 
 require_once 'src/Factories/PdoFactory.php';
 require_once 'src/Models/ProductModel.php';
 require_once 'src/Entities/Product.php';
+require_once 'src/Services/SelectedIdsService.php';
+
+
 
 $db = PdoFactory::connect();
 
@@ -14,16 +18,23 @@ $products = ProductModel::getProducts($db);
 $categories = ProductModel::getCategories($db);
 $characters = ProductModel::getCharacters($db);
 
-
-function selectCategories ($categories): array {
-    foreach ($categories as $category) {
-        if (isset($_GET[$category->category_id])) {
-            $selectedCategories[] = $category->category_id;
-        }
-
-    }
-    return $selectedCategories;
+foreach($categories as $category) {
+    $category->setSelectionId();
 }
+
+foreach($characters as $character) {
+    $character->setSelectionId();
+}
+
+//function selectCategories ($categories): array {
+//    foreach ($categories as $category) {
+//        if (isset($_GET[$category->category_id])) {
+//            $selectedCategories[] = $category->category_id;
+//        }
+//
+//    }
+//    return $selectedCategories;
+//}
 ?>
 
 <!doctype html>
@@ -64,8 +75,10 @@ function selectCategories ($categories): array {
         echo $product->displayHP();
     }
  } else {
-         $selectedCategories = selectCategories($categories);
-         $selectedProducts = ProductModel::getSelectedProducts($db, $selectedCategories);
+     $selectedCategories = SelectedIdsService::selectIds($categories);
+     $selectedCharacters = SelectedIdsService::selectIds($characters);
+//       $selectedCategories = selectCategories($categories);
+         $selectedProducts = ProductModel::getSelectedProducts($db, $selectedCategories, $selectedCharacters);
          foreach ($selectedProducts as $product) {
             echo $product->displayHP();
         }
